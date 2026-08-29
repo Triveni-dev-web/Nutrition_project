@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Food</title>
+</head>
+
+<body>
+
+<h1>Edit Food Entry</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <label>Date:</label>
+    <input type="date"
+           name="date"
+           value="{{ entry.date|date:'Y-m-d' }}"
+           required>
+    <br><br>
+
+    <label>Meal Type:</label>
+    <select name="meal_type">
+
+        <option value="Breakfast"
+            {% if entry.meal_type == "Breakfast" %}selected{% endif %}>
+            Breakfast
+        </option>
+
+        <option value="Lunch"
+            {% if entry.meal_type == "Lunch" %}selected{% endif %}>
+            Lunch
+        </option>
+
+        <option value="Dinner"
+            {% if entry.meal_type == "Dinner" %}selected{% endif %}>
+            Dinner
+        </option>
+
+        <option value="Snack"
+            {% if entry.meal_type == "Snack" %}selected{% endif %}>
+            Snack
+        </option>
+
+    </select>
+    <br><br>
+
+    <label>Food Name:</label>
+    <input type="text"
+           name="food_name"
+           value="{{ entry.food_name }}"
+           required>
+    <br><br>
+
+    <label>Quantity:</label>
+    <input type="text"
+           name="quantity"
+           value="{{ entry.quantity }}"
+           required>
+    <br><br>
+
+    <button type="submit">Save Changes</button>
+
+</form>
+
+<br>
+
+<a href="{% url 'food_diary' %}">Back to Food Diary</a>
+
+</body>
+</html>

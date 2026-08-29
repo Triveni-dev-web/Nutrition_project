@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Diary</title>
+</head>
+
+<body>
+
+    <h1>🍽️ My Food Diary</h1>
+
+    <!-- ================= ADD FOOD ================= -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Date:</label>
+        <input type="date" name="date">
+        <br><br>
+
+        <label>Meal Type:</label>
+        <select name="meal_type">
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Snack">Snack</option>
+        </select>
+        <br><br>
+
+        <label>Food Name:</label>
+        <input type="text"
+               name="food_name"
+               placeholder="Enter food name"
+               required>
+        <br><br>
+
+        <label>Quantity:</label>
+        <input type="text"
+               name="quantity"
+               placeholder="Example: 1 cup"
+               required>
+        <br><br>
+
+        <button type="submit">Add Food</button>
+    </form>
+
+
+    <hr>
+
+    <h2>Today's Food</h2>
+
+    {% if entries %}
+
+    <table border="1" cellpadding="8">
+
+        <tr>
+            <th>Date</th>
+            <th>Meal</th>
+            <th>Food</th>
+            <th>Quantity</th>
+            <th>Action</th>
+        </tr>
+
+        {% for entry in entries %}
+
+        <tr>
+
+            <!-- DISPLAY DATA -->
+            <td>{{ entry.date }}</td>
+
+            <td>{{ entry.meal_type }}</td>
+
+            <td>{{ entry.food_name }}</td>
+
+            <td>{{ entry.quantity }}</td>
+
+
+            <!-- ACTIONS -->
+            <td>
+
+                <!-- ================= EDIT ================= -->
+                <a href="{% url 'edit_food' entry.id %}">
+                   <button type="button">Edit</button>
+                </a>
+
+
+                <!-- ================= DELETE ================= -->
+                <form method="POST" style="display:inline;">
+                    {% csrf_token %}
+
+                    <input type="hidden"
+                           name="action"
+                           value="delete">
+
+                    <input type="hidden"
+                           name="entry_id"
+                           value="{{ entry.id }}">
+
+                    <button type="submit">Delete</button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+        <p>No food entries yet.</p>
+
+    {% endif %}
+
+</body>
+</html>

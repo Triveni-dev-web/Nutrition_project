@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Nutrition App</title>
+</head>
+<body>
+
+    <h1>Create Your Account</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Register</button>
+    </form>
+
+</body>
+</html>
