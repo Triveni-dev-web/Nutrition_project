@@ -8,6 +8,4 @@ urlpatterns = [
     path("nutrition/", views.nutrition, name="nutrition"),
     path("food-diary/", views.food_diary, name="food_diary"),
     path("food-diary/edit/<int:entry_id>/", views.edit_food,name="edit_food"),
-    path("symptoms/",views.symptoms,name="symptoms"),
-    path("health-profile/",views.health_profile,name="health_profile"),
 ]
