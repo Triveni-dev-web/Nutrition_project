@@ -40,12 +40,18 @@
         }
 
         input,
-        select {
+        select,
+        textarea {
             width: 100%;
             padding: 11px;
             border: 1px solid #ccc;
             border-radius: 8px;
             box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
         }
 
         button {
@@ -99,42 +105,94 @@
 
     <h1>🥗 Nutrition Recommendation</h1>
 
+    <!-- ================= FORM ================= -->
+
     <form method="POST">
 
         {% csrf_token %}
 
+        <!-- AGE -->
         <div class="form-group">
             <label>Age</label>
-            <input type="number" name="age" value="{{ age }}" required>
+
+            <input
+                type="number"
+                name="age"
+                value="{{ age|default:'' }}"
+                required
+            >
         </div>
 
+
+        <!-- GENDER -->
         <div class="form-group">
+
             <label>Gender</label>
+
             <select name="gender" required>
-                <option value="Male" {% if gender == "Male" %}selected{% endif %}>
+
+                <option value="">Select Gender</option>
+
+                <option value="Male"
+                    {% if gender == "Male" %}selected{% endif %}>
                     Male
                 </option>
 
-                <option value="Female" {% if gender == "Female" %}selected{% endif %}>
+                <option value="Female"
+                    {% if gender == "Female" %}selected{% endif %}>
                     Female
                 </option>
+
+                <option value="Other"
+                    {% if gender == "Other" %}selected{% endif %}>
+                    Other
+                </option>
+
             </select>
+
         </div>
 
+
+        <!-- HEIGHT -->
         <div class="form-group">
+
             <label>Height (cm)</label>
-            <input type="number" name="height" value="{{ height }}" required>
+
+            <input
+                type="number"
+                step="0.1"
+                name="height"
+                value="{{ height|default:'' }}"
+                required
+            >
+
         </div>
 
+
+        <!-- WEIGHT -->
         <div class="form-group">
+
             <label>Weight (kg)</label>
-            <input type="number" name="weight" value="{{ weight }}" required>
+
+            <input
+                type="number"
+                step="0.1"
+                name="weight"
+                value="{{ weight|default:'' }}"
+                required
+            >
+
         </div>
 
+
+        <!-- ACTIVITY LEVEL -->
         <div class="form-group">
+
             <label>Activity Level</label>
 
             <select name="activity" required>
+
+                <option value="">Select Activity</option>
 
                 <option value="Low"
                     {% if activity == "Low" %}selected{% endif %}>
@@ -152,12 +210,18 @@
                 </option>
 
             </select>
+
         </div>
 
+
+        <!-- HEALTH GOAL -->
         <div class="form-group">
+
             <label>Health Goal</label>
 
             <select name="goal" required>
+
+                <option value="">Select Goal</option>
 
                 <option value="Weight Loss"
                     {% if goal == "Weight Loss" %}selected{% endif %}>
@@ -175,23 +239,18 @@
                 </option>
 
             </select>
+
         </div>
 
+
+        <!-- DIET PREFERENCE -->
         <div class="form-group">
+
             <label>Diet Preference</label>
-            <div class="form-group">
-            <label>Medical Conditions</label>
-            <input type="text" name="medical_conditions"
-           placeholder="Example: Diabetes, BP, None">
-        </div>
-
-        <div class="form-group">
-            <label>Dietary Restrictions</label>
-        <input type="text" name="dietary_restrictions"
-           placeholder="Example: No sugar, No dairy, None">
-        </div>
 
             <select name="diet" required>
+
+                <option value="">Select Diet</option>
 
                 <option value="Vegetarian"
                     {% if diet == "Vegetarian" %}selected{% endif %}>
@@ -209,8 +268,39 @@
                 </option>
 
             </select>
+
         </div>
 
+
+        <!-- MEDICAL CONDITIONS -->
+        <div class="form-group">
+
+            <label>Medical Conditions</label>
+
+            <textarea
+                name="medical_conditions"
+                rows="3"
+                placeholder="Example: Diabetes, BP, None"
+            >{{ medical_conditions|default:'' }}</textarea>
+
+        </div>
+
+
+        <!-- DIETARY RESTRICTIONS -->
+        <div class="form-group">
+
+            <label>Dietary Restrictions</label>
+
+            <textarea
+                name="dietary_restrictions"
+                rows="3"
+                placeholder="Example: No sugar, No dairy, None"
+            >{{ dietary_restrictions|default:'' }}</textarea>
+
+        </div>
+
+
+        <!-- BUTTON -->
         <button type="submit">
             Get Recommendations
         </button>
@@ -218,12 +308,18 @@
     </form>
 
 
+    <!-- ================= MESSAGE ================= -->
+
     {% if message %}
+
         <div class="message">
             {{ message }}
         </div>
+
     {% endif %}
 
+
+    <!-- ================= TEXT RECOMMENDATIONS ================= -->
 
     {% if recommendations %}
 
@@ -232,7 +328,9 @@
         <ul class="recommendations">
 
             {% for item in recommendations %}
+
                 <li>{{ item }}</li>
+
             {% endfor %}
 
         </ul>
@@ -240,29 +338,52 @@
     {% endif %}
 
 
+    <!-- ================= RECOMMENDED FOODS ================= -->
+
     {% if recommended_foods %}
 
         <h2>Recommended Foods</h2>
 
         <table>
 
-            <tr>
-                <th>Food Name</th>
-                <th>Category</th>
-                <th>Meal Type</th>
-                <th>Serving Size</th>
-            </tr>
+            <thead>
 
-            {% for food in recommended_foods %}
+                <tr>
+                    <th>Food Name</th>
+                    <th>Category</th>
+                    <th>Meal Type</th>
+                    <th>Serving Size</th>
+                </tr>
 
-            <tr>
-                <td>{{ food.food_name }}</td>
-                <td>{{ food.category }}</td>
-                <td>{{ food.meal_type }}</td>
-                <td>{{ food.serving_size }}</td>
-            </tr>
+            </thead>
 
-            {% endfor %}
+            <tbody>
+
+                {% for food in recommended_foods %}
+
+                    <tr>
+
+                        <td>
+                            {{ food.food_name }}
+                        </td>
+
+                        <td>
+                            {{ food.category }}
+                        </td>
+
+                        <td>
+                            {{ food.meal_type }}
+                        </td>
+
+                        <td>
+                            {{ food.serving_size }}
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
 
         </table>
 
